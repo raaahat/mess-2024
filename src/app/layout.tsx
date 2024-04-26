@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
+import { Nav, NavLink } from '@/components/Nav';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -26,7 +27,13 @@ export default function RootLayout({
           inter.variable
         )}
       >
-        {children}
+        <Nav>
+          <NavLink href="/">Dashboard</NavLink>
+          <NavLink href="/member">Members</NavLink>
+          <NavLink href="/daily-meal">Daily Meal</NavLink>
+          <NavLink href="/bazar">Bazar</NavLink>
+        </Nav>
+        <div className="container my-6">{children}</div>
       </body>
     </html>
   );
