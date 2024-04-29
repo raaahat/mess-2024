@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import prisma from '@/lib/prisma';
 import { CheckCircle2, MoreVertical, XCircle } from 'lucide-react';
 import Link from 'next/link';
-import { PageHeader } from './_components/PageHeader';
+import { PageHeader } from '../../components/PageHeader';
 import {
   Table,
   TableBody,

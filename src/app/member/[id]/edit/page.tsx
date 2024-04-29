@@ -1,6 +1,6 @@
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
-import { PageHeader } from '../../_components/PageHeader';
+import { PageHeader } from '../../../../components/PageHeader';
 import EditUserForm from '../../_components/EditUserForm';
 
 export default async function Page({ params }: { params: { id: string } }) {

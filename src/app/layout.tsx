@@ -30,7 +30,7 @@ export default function RootLayout({
         <Nav>
           <NavLink href="/">Dashboard</NavLink>
           <NavLink href="/member">Members</NavLink>
-          <NavLink href="/daily-meal">Daily Meal</NavLink>
+          <NavLink href="/meal">Daily Meal</NavLink>
           <NavLink href="/bazar">Bazar</NavLink>
         </Nav>
         <div className="container my-6">{children}</div>
