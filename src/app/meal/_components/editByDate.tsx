@@ -8,16 +8,30 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import prisma from '@/lib/prisma';
 import { formatDate } from '@/lib/utils';
 import { Fragment } from 'react';
 
-function EditByDate({
+async function EditByDate({
   date,
   memberName,
 }: {
   date: Date;
   memberName: { id: string; name: string }[];
 }) {
+  const mealsOfTheDay = await prisma.dailyMeal.findMany({
+    where: { date },
+    select: {
+      member: { select: { name: true, id: true } },
+      id: true,
+      breakfast: true,
+      lunch: true,
+      dinner: true,
+      friday: true,
+      date: true,
+    },
+  });
+  console.log(mealsOfTheDay);
   return (
     <>
       <DialogContent className="sm:max-w-[425px]">

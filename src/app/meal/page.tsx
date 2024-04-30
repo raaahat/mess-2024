@@ -44,7 +44,7 @@ async function MealTable() {
 
   //generate array of dates for date columns for the meal table
   const startDate = new Date('2024-04-12');
-  const endDate = new Date('2024-05-14');
+  const endDate = new Date('2024-04-15');
   const dates = createDateArray(startDate, endDate);
   const dailyMeals = await prisma.dailyMeal.findMany();
 
