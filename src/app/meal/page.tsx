@@ -21,9 +21,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { createDateArray, formatDate } from '@/lib/utils';
 import MealCell from './_components/meal-cell';
-import { addMealByDate } from './actions/meal';
-import { EditByDate } from './_components/editByDate';
-import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 
 export default async function MemberPage() {
   return (
@@ -71,20 +68,13 @@ async function MealTable() {
           return (
             <TableRow key={date.toString()}>
               <TableCell>
-                <Dialog>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <MoreVertical />
-                      <span className="sr-only">Actions</span>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DialogTrigger asChild>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                      </DialogTrigger>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                  <EditByDate date={date} memberName={memberName} />
-                </Dialog>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <MoreVertical />
+                    <span className="sr-only">Actions</span>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent></DropdownMenuContent>
+                </DropdownMenu>
               </TableCell>
               <TableCell>{formatDate(date)}</TableCell>
               {memberName.map((member) => {

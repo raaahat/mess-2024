@@ -13,15 +13,6 @@ import MealInputBox from './meal-input-box';
 import { getMealsByDate } from '../actions/meal';
 import EditWindow from './editWindow';
 
-type MealCart = {
-  memberId: string;
-  meal: {
-    breakfast?: number;
-    lunch?: number;
-    dinner?: number;
-    friday?: number;
-  };
-};
 export async function EditByDate({
   date,
   memberName,
@@ -42,7 +33,6 @@ export async function EditByDate({
   //   },
   // });
   const mealsOfTheDay = await getMealsByDate(date);
-  console.log(mealsOfTheDay);
   const getMeal = (id: string) => {
     const matchedMeal = mealsOfTheDay.find((meal) => meal.member.id === id);
 
@@ -58,7 +48,11 @@ export async function EditByDate({
     return {};
   };
   return (
-    <EditWindow date={date} memberName={memberName} getMeal={getMeal} />
+    <EditWindow
+      date={date}
+      memberName={memberName}
+      mealsOfTheDay={mealsOfTheDay}
+    />
     // <>
     //   <DialogContent className="sm:max-w-[425px]">
     //     <DialogHeader>
