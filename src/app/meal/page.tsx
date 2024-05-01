@@ -22,7 +22,7 @@ import {
 import { createDateArray, formatDate } from '@/lib/utils';
 import MealCell from './_components/meal-cell';
 import { addMealByDate } from './actions/meal';
-import EditByDate from './_components/editByDate';
+import { EditByDate } from './_components/editByDate';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 
 export default async function MemberPage() {

@@ -1,3 +1,4 @@
+'use server';
 import prisma from '@/lib/prisma';
 
 export async function addMealByDate(date: Date) {
@@ -57,4 +58,19 @@ export async function addMealByDate(date: Date) {
   //     dinner: 1,
   //   },
   // });
+}
+export async function getMealsByDate(date: Date) {
+  const mealsOfTheDay = await prisma.dailyMeal.findMany({
+    where: { date },
+    select: {
+      member: { select: { name: true, id: true } },
+      id: true,
+      breakfast: true,
+      lunch: true,
+      dinner: true,
+      friday: true,
+      date: true,
+    },
+  });
+  return mealsOfTheDay;
 }
