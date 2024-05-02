@@ -17,10 +17,10 @@ import Link from 'next/link';
 type MealCart = {
   memberId: string;
   meal: {
-    breakfast?: number;
-    lunch?: number;
-    dinner?: number;
-    friday?: number;
+    breakfast?: number | null;
+    lunch?: number | null;
+    dinner?: number | null;
+    friday?: number | null;
   };
 }[];
 function EditWindow({
@@ -50,10 +50,10 @@ function EditWindow({
   function modifyCart(
     id: string,
     meal: {
-      breakfast?: number;
-      lunch?: number;
-      dinner?: number;
-      friday?: number;
+      breakfast?: number | null;
+      lunch?: number | null;
+      dinner?: number | null;
+      friday?: number | null;
     }
   ) {
     // if cart is empty, just add to cart
@@ -69,7 +69,8 @@ function EditWindow({
     //if member id exists, update the meals
     setMealCart((prev) => {
       return prev.map((obj) => {
-        if (obj.memberId === id) return { ...obj, meal };
+        if (obj.memberId === id)
+          return { ...obj, meal: { ...obj.meal, ...meal } };
         return obj;
       });
     });
@@ -110,6 +111,7 @@ function EditWindow({
                 <MealInputBox
                   memberList={member}
                   initMeal={getMeal(member.id)}
+                  modifyCart={modifyCart}
                 />
               </div>
             );
