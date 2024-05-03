@@ -3,19 +3,12 @@ import { Label } from '@/components/ui/label';
 import React, { useEffect, useState } from 'react';
 type MealInputBoxProps = {
   memberList: { id: string; name: string };
-  initMeal?:
-    | {
-        breakfast: number | null;
-        lunch: number | null;
-        dinner: number | null;
-        friday: number | null;
-      }
-    | {
-        breakfast?: undefined;
-        lunch?: undefined;
-        dinner?: undefined;
-        friday?: undefined;
-      };
+  initMeal?: {
+    breakfast?: number | null;
+    lunch?: number | null;
+    dinner?: number | null;
+    friday?: number | null;
+  };
   modifyCart: (
     id: string,
     meal: {
@@ -37,8 +30,10 @@ function MealInputBox({
     modifyCart(memberList.id, meal);
   }, [meal]);
   function handleBreakfast() {
-    if (!meal?.breakfast) {
-      setMeal({ ...meal });
+    if (!meal?.breakfast || meal?.breakfast === 0) {
+      setMeal({ ...meal, breakfast: 1 });
+    } else {
+      setMeal({ ...meal, breakfast: 0 });
     }
   }
   return (
@@ -50,7 +45,11 @@ function MealInputBox({
         onClick={handleBreakfast}
         className="m-2 bg-gray-200 w-6 rounded-sm"
       >
-        {meal?.breakfast || '-'}
+        {meal?.breakfast
+          ? meal.breakfast == 0
+            ? meal.breakfast
+            : meal.breakfast
+          : '-'}
       </button>
       <button className="m-2 bg-gray-200 w-6 rounded-sm">
         {meal?.lunch || '-'}

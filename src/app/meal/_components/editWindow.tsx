@@ -90,6 +90,7 @@ function EditWindow({
 
     return {};
   };
+  console.log(mealCart);
   return (
     <div>
       <Dialog>
