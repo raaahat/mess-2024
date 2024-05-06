@@ -33,6 +33,7 @@ export default function RootLayout({
           <NavLink href="/member">Members</NavLink>
           <NavLink href="/meal">Daily Meal</NavLink>
           <NavLink href="/bazar">Bazar</NavLink>
+          <NavLink href="/meal/edit-by-date">Edit Meal</NavLink>
         </Nav>
         <div className="container my-6">{children}</div>
       </body>
