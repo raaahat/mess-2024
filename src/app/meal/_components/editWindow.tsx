@@ -14,83 +14,49 @@ import { formatDate } from '@/lib/utils';
 import React, { useState } from 'react';
 import MealInputBox from './meal-input-box';
 import Link from 'next/link';
+import { Meal } from '@/lib/definitions';
 type MealCart = {
   memberId: string;
-  meal: {
-    breakfast?: number | null;
-    lunch?: number | null;
-    dinner?: number | null;
-    friday?: number | null;
-  };
+  meal: Meal;
 }[];
 function EditWindow({
   date,
-  memberName,
+  memberList,
   mealsOfTheDay,
 }: {
   date: Date;
-  memberName: {
+  memberList: {
     id: string;
     name: string;
   }[];
   mealsOfTheDay: {
     date: Date;
     id: string;
-    breakfast: number | null;
-    lunch: number | null;
-    dinner: number | null;
-    friday: number | null;
+    breakfast: number;
+    lunch: number;
+    dinner: number;
+    friday: number;
     member: {
       id: string;
       name: string;
     };
   }[];
 }) {
-  const [mealCart, setMealCart] = useState<MealCart>([]);
-  function modifyCart(
-    id: string,
-    meal: {
-      breakfast?: number | null;
-      lunch?: number | null;
-      dinner?: number | null;
-      friday?: number | null;
-    }
-  ) {
-    // if cart is empty, just add to cart
-    if (mealCart.length === 0) {
-      setMealCart([{ memberId: id, meal }]);
-      return;
-    }
-    // if member id does not exist in cart, add to cart
-    if (mealCart.findIndex((obj) => obj.memberId === id) < -1) {
-      setMealCart((prev) => [...prev, { memberId: id, meal }]);
-      return;
-    }
-    //if member id exists, update the meals
-    setMealCart((prev) => {
-      return prev.map((obj) => {
-        if (obj.memberId === id)
-          return { ...obj, meal: { ...obj.meal, ...meal } };
-        return obj;
-      });
-    });
+  const intital_cart = mealsOfTheDay.map((obj) => {
+    return {
+      memberId: obj.member.id,
+      meal: {
+        breakfast: obj.breakfast,
+        lunch: obj.lunch,
+        dinner: obj.dinner,
+        friday: obj.friday,
+      },
+    };
+  });
+  const [mealCart, setMealCart] = useState<MealCart>(intital_cart);
+  function toggleBreakfast(id: string) {
+    const index = mealCart.find((obj) => obj.memberId === id);
   }
-
-  const getMeal = (id: string) => {
-    const matchedMeal = mealsOfTheDay.find((meal) => meal.member.id === id);
-
-    // returns a new object if found
-    if (matchedMeal)
-      return {
-        breakfast: matchedMeal?.breakfast,
-        lunch: matchedMeal?.lunch,
-        dinner: matchedMeal?.dinner,
-        friday: matchedMeal?.friday,
-      };
-
-    return {};
-  };
-  console.log(mealCart);
   return (
     <div>
       <Dialog>
@@ -102,18 +68,27 @@ function EditWindow({
           <DialogHeader>
             <DialogTitle>Date: {formatDate(date)}</DialogTitle>
             <DialogDescription>
-              Make changes to your profile here. Click save when youre done.
+              Make changes to your profile here. Click save when youre done.{' '}
+              <br />
+              <p>{JSON.stringify(mealsOfTheDay)}</p>
+              <br />
+              meal cart: {JSON.stringify(mealCart)}
             </DialogDescription>
           </DialogHeader>
 
-          {memberName.map((member) => {
+          {memberList.map((member) => {
+            const mealData = mealsOfTheDay.find(
+              (obj) => obj.member.id === member.id
+            );
+            const meal = {
+              breakfast: mealData?.breakfast,
+              lunch: mealData?.lunch,
+              dinner: mealData?.dinner,
+              friday: mealData?.friday,
+            };
             return (
               <div key={member.id}>
-                <MealInputBox
-                  memberList={member}
-                  initMeal={getMeal(member.id)}
-                  modifyCart={modifyCart}
-                />
+                <MealInputBox memberList={member} meal={meal} />
               </div>
             );
           })}

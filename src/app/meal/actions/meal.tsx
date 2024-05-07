@@ -74,3 +74,9 @@ export async function getMealsByDate(date: Date) {
   });
   return mealsOfTheDay;
 }
+export async function getMemberList() {
+  return await prisma.member.findMany({
+    select: { id: true, name: true },
+    orderBy: [{ is_applicableFor_sc: 'desc' }, { createdAt: 'asc' }],
+  });
+}

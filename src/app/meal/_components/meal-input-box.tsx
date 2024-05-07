@@ -1,50 +1,23 @@
 'use client';
 import { Label } from '@/components/ui/label';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 type MealInputBoxProps = {
   memberList: { id: string; name: string };
-  initMeal?: {
-    breakfast?: number | null;
-    lunch?: number | null;
-    dinner?: number | null;
-    friday?: number | null;
+  meal: {
+    breakfast: number | undefined;
+    lunch: number | undefined;
+    dinner: number | undefined;
+    friday: number | undefined;
   };
-  modifyCart: (
-    id: string,
-    meal: {
-      breakfast?: number | null;
-      lunch?: number | null;
-      dinner?: number | null;
-      friday?: number | null;
-    }
-  ) => void;
 };
 
-function MealInputBox({
-  memberList,
-  initMeal = {},
-  modifyCart,
-}: MealInputBoxProps) {
-  const [meal, setMeal] = useState<typeof initMeal>(initMeal);
-  useEffect(() => {
-    modifyCart(memberList.id, meal);
-  }, [meal]);
-  function handleBreakfast() {
-    if (!meal?.breakfast || meal?.breakfast === 0) {
-      setMeal({ ...meal, breakfast: 1 });
-    } else {
-      setMeal({ ...meal, breakfast: 0 });
-    }
-  }
+function MealInputBox({ memberList, meal }: MealInputBoxProps) {
   return (
     <div>
       <Label htmlFor="name" className="text-right">
         {memberList.name}
       </Label>
-      <button
-        onClick={handleBreakfast}
-        className="m-2 bg-gray-200 w-6 rounded-sm"
-      >
+      <button className="m-2 bg-gray-200 w-6 rounded-sm">
         {meal?.breakfast
           ? meal.breakfast == 0
             ? meal.breakfast

@@ -24,10 +24,10 @@ model Member {
 model DailyMeal {
   id        String   @id @default(uuid())
   date      DateTime
-  breakfast Int?     @default(0)
-  lunch     Int?     @default(0)
-  dinner    Int?     @default(0)
-  friday    Int?     @default(0)
+  breakfast Int      @default(0)
+  lunch     Int      @default(0)
+  dinner    Int      @default(0)
+  friday    Int      @default(0)
   memberId  String
   member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
