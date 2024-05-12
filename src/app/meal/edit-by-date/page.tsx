@@ -1,4 +1,3 @@
-import prisma from '@/lib/prisma';
 import React from 'react';
 import { getMealsByDate, getMemberList } from '../actions/meal';
 import EditWindow from '../_components/editWindow';
@@ -10,18 +9,6 @@ async function EditByDate() {
   //get all meals of the date
   const mealsOfTheDay = await getMealsByDate(date);
 
-  // const getMeal = (id: string) => {
-  //   const matchedMeal = mealsOfTheDay.find((meal) => meal.member.id === id);
-
-  //   // returns a new object if found
-  //   if (matchedMeal)
-  //     return {
-  //       breakfast: matchedMeal?.breakfast,
-  //       lunch: matchedMeal?.lunch,
-  //       dinner: matchedMeal?.dinner,
-  //       friday: matchedMeal?.friday,
-  //     };
-  // };
   return (
     <div>
       <EditWindow

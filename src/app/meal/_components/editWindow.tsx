@@ -2,7 +2,6 @@
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -13,7 +12,6 @@ import {
 import { formatDate } from '@/lib/utils';
 import React, { useState } from 'react';
 import MealInputBox from './meal-input-box';
-import Link from 'next/link';
 import { Meal } from '@/lib/definitions';
 type MealCart = {
   memberId: string;
@@ -55,16 +53,48 @@ function EditWindow({
   });
   const [mealCart, setMealCart] = useState<MealCart>(intital_cart);
   function toggleBreakfast(id: string) {
-    const index = mealCart.find((obj) => obj.memberId === id);
+    const index = mealCart.findIndex((obj) => obj.memberId === id);
+    //if there is no entry, create one
+    console.log(mealCart);
+
+    if (index === -1) {
+      setMealCart((prev) => [
+        ...prev,
+        {
+          memberId: id,
+          meal: {
+            breakfast: 1,
+            dinner: 0,
+            lunch: 0,
+            friday: 0,
+          },
+        },
+      ]);
+    } else {
+      setMealCart((prev) => {
+        return prev.map((obj) => {
+          if (obj.memberId === id)
+            return {
+              ...obj,
+              meal: {
+                ...obj.meal,
+                breakfast: obj.meal.breakfast === 0 ? 1 : 0,
+              },
+            };
+          return obj;
+        });
+      });
+    }
   }
+
+  const toggleHandler = {
+    toggleBreakfast,
+  };
   return (
     <div>
       <Dialog>
         <DialogTrigger>Open</DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
-          <DialogClose asChild>
-            <Link href="/meal">x</Link>
-          </DialogClose>
           <DialogHeader>
             <DialogTitle>Date: {formatDate(date)}</DialogTitle>
             <DialogDescription>
@@ -86,9 +116,14 @@ function EditWindow({
               dinner: mealData?.dinner,
               friday: mealData?.friday,
             };
+
             return (
               <div key={member.id}>
-                <MealInputBox memberList={member} meal={meal} />
+                <MealInputBox
+                  memberList={member}
+                  meal={meal}
+                  toggleHandler={toggleHandler}
+                />
               </div>
             );
           })}

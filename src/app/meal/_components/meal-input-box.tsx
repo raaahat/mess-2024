@@ -9,15 +9,21 @@ type MealInputBoxProps = {
     dinner: number | undefined;
     friday: number | undefined;
   };
+  toggleHandler: {
+    toggleBreakfast: (id: string) => void;
+  };
 };
 
-function MealInputBox({ memberList, meal }: MealInputBoxProps) {
+function MealInputBox({ memberList, meal, toggleHandler }: MealInputBoxProps) {
   return (
     <div>
       <Label htmlFor="name" className="text-right">
         {memberList.name}
       </Label>
-      <button className="m-2 bg-gray-200 w-6 rounded-sm">
+      <button
+        className="m-2 bg-gray-200 w-6 rounded-sm"
+        onClick={() => toggleHandler.toggleBreakfast(memberList.id)}
+      >
         {meal?.breakfast
           ? meal.breakfast == 0
             ? meal.breakfast
