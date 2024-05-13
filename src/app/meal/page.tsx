@@ -41,7 +41,7 @@ async function MealTable() {
 
   //generate array of dates for date columns for the meal table
   const startDate = new Date('2024-04-12');
-  const endDate = new Date('2024-04-15');
+  const endDate = new Date('2024-05-14');
   const dates = createDateArray(startDate, endDate);
   const dailyMeals = await prisma.dailyMeal.findMany();
 
@@ -73,7 +73,17 @@ async function MealTable() {
                     <MoreVertical />
                     <span className="sr-only">Actions</span>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent></DropdownMenuContent>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={`meal/edit-by-date/${date
+                          .toISOString()
+                          .slice(0, 10)}/`}
+                      >
+                        Add Meal
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
               <TableCell>{formatDate(date)}</TableCell>

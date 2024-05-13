@@ -1,19 +1,21 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { formatDate } from '@/lib/utils';
 import React, { useState } from 'react';
 import MealInputBox from './meal-input-box';
 import { Meal } from '@/lib/definitions';
+import { upsertMealsData } from '../actions/meal';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { useFormStatus } from 'react-dom';
 type MealCart = {
+  id?: string;
   memberId: string;
   meal: Meal;
 }[];
@@ -42,6 +44,7 @@ function EditWindow({
 }) {
   const intital_cart = mealsOfTheDay.map((obj) => {
     return {
+      id: obj.id,
       memberId: obj.member.id,
       meal: {
         breakfast: obj.breakfast,
@@ -52,10 +55,10 @@ function EditWindow({
     };
   });
   const [mealCart, setMealCart] = useState<MealCart>(intital_cart);
+
   function toggleBreakfast(id: string) {
     const index = mealCart.findIndex((obj) => obj.memberId === id);
     //if there is no entry, create one
-    console.log(mealCart);
 
     if (index === -1) {
       setMealCart((prev) => [
@@ -86,35 +89,129 @@ function EditWindow({
       });
     }
   }
+  function toggleLunch(id: string) {
+    const index = mealCart.findIndex((obj) => obj.memberId === id);
+    //if there is no entry, create one
+
+    if (index === -1) {
+      setMealCart((prev) => [
+        ...prev,
+        {
+          memberId: id,
+          meal: {
+            breakfast: 0,
+            dinner: 0,
+            lunch: 1,
+            friday: 0,
+          },
+        },
+      ]);
+    } else {
+      setMealCart((prev) => {
+        return prev.map((obj) => {
+          if (obj.memberId === id)
+            return {
+              ...obj,
+              meal: {
+                ...obj.meal,
+                lunch: obj.meal.lunch === 0 ? 1 : 0,
+              },
+            };
+          return obj;
+        });
+      });
+    }
+  }
+  function toggleDinner(id: string) {
+    const index = mealCart.findIndex((obj) => obj.memberId === id);
+    //if there is no entry, create one
+
+    if (index === -1) {
+      setMealCart((prev) => [
+        ...prev,
+        {
+          memberId: id,
+          meal: {
+            breakfast: 0,
+            dinner: 1,
+            lunch: 0,
+            friday: 0,
+          },
+        },
+      ]);
+    } else {
+      setMealCart((prev) => {
+        return prev.map((obj) => {
+          if (obj.memberId === id)
+            return {
+              ...obj,
+              meal: {
+                ...obj.meal,
+                dinner: obj.meal.dinner === 0 ? 1 : 0,
+              },
+            };
+          return obj;
+        });
+      });
+    }
+  }
+  function toggleFriday(id: string) {
+    const index = mealCart.findIndex((obj) => obj.memberId === id);
+    //if there is no entry, create one
+
+    if (index === -1) {
+      setMealCart((prev) => [
+        ...prev,
+        {
+          memberId: id,
+          meal: {
+            breakfast: 0,
+            dinner: 0,
+            lunch: 0,
+            friday: 1,
+          },
+        },
+      ]);
+    } else {
+      setMealCart((prev) => {
+        return prev.map((obj) => {
+          if (obj.memberId === id)
+            return {
+              ...obj,
+              meal: {
+                ...obj.meal,
+                friday: obj.meal.friday === 0 ? 1 : 0,
+              },
+            };
+          return obj;
+        });
+      });
+    }
+  }
 
   const toggleHandler = {
     toggleBreakfast,
+    toggleLunch,
+    toggleDinner,
+    toggleFriday,
   };
   return (
     <div>
-      <Dialog>
-        <DialogTrigger>Open</DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Date: {formatDate(date)}</DialogTitle>
-            <DialogDescription>
-              Make changes to your profile here. Click save when youre done.{' '}
-              <br />
-              <p>{JSON.stringify(mealsOfTheDay)}</p>
-              <br />
-              meal cart: {JSON.stringify(mealCart)}
-            </DialogDescription>
-          </DialogHeader>
-
+      <Card>
+        <CardHeader>
+          <CardTitle>Date: {formatDate(date)}</CardTitle>
+          <CardDescription>
+            Make changes by clicking on meal box. Click save when youre done.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           {memberList.map((member) => {
-            const mealData = mealsOfTheDay.find(
-              (obj) => obj.member.id === member.id
-            );
+            const mealData = mealCart.find((obj) => obj.memberId === member.id);
             const meal = {
-              breakfast: mealData?.breakfast,
-              lunch: mealData?.lunch,
-              dinner: mealData?.dinner,
-              friday: mealData?.friday,
+              breakfast: mealData?.meal.breakfast,
+              lunch: mealData?.meal.lunch,
+              dinner: mealData?.meal.dinner,
+              friday: mealData?.meal.friday,
             };
 
             return (
@@ -127,14 +224,27 @@ function EditWindow({
               </div>
             );
           })}
-
-          <DialogFooter>
-            <Button type="submit">Save changes</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        </CardContent>
+        <CardFooter>
+          <form
+            action={async (formData) => {
+              await upsertMealsData(mealCart, date);
+            }}
+          >
+            <SubmitButton />
+          </form>
+        </CardFooter>
+      </Card>
     </div>
   );
 }
+function SubmitButton() {
+  const { pending } = useFormStatus();
 
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending ? 'Saving...' : 'Save changes'}
+    </Button>
+  );
+}
 export default EditWindow;

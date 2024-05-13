@@ -1,5 +1,7 @@
 'use server';
 import prisma from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 export async function addMealByDate(date: Date) {
   const res = await prisma.dailyMeal.createMany({
@@ -74,9 +76,43 @@ export async function getMealsByDate(date: Date) {
   });
   return mealsOfTheDay;
 }
+
 export async function getMemberList() {
   return await prisma.member.findMany({
     select: { id: true, name: true },
     orderBy: [{ is_applicableFor_sc: 'desc' }, { createdAt: 'asc' }],
   });
+}
+export async function upsertMealsData(
+  mealCart: {
+    id?: string;
+    memberId: string;
+    meal: {
+      breakfast: number;
+      lunch: number;
+      dinner: number;
+      friday: number;
+    };
+  }[],
+  date: Date
+) {
+  mealCart.map(async (obj) => {
+    if (obj.id !== undefined) {
+      await prisma.dailyMeal.update({
+        where: { id: obj.id },
+        data: { ...obj.meal },
+      });
+    } else {
+      await prisma.dailyMeal.create({
+        data: {
+          date,
+          memberId: obj.memberId,
+          ...obj.meal,
+        },
+      });
+    }
+  });
+
+  revalidatePath('/meal');
+  redirect('/meal');
 }

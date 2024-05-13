@@ -25,6 +25,7 @@ export function formatDate(date: Date): string {
   const dayOfWeek = date.toLocaleString('default', { weekday: 'short' });
   return `${day} ${month} - ${dayOfWeek}`;
 }
+
 export function checkFriday(date: Date): boolean {
   // Check if the day of the week is Friday (5)
   return date.getDay() === 5;

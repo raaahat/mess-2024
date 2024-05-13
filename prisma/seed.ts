@@ -1,3 +1,1 @@
-import { addMealByDate } from '@/app/meal/actions/meal';
-
-addMealByDate(new Date('2024-04-20'));
+import { addMealByDate, upsertMealsByDate } from '@/app/meal/actions/meal';

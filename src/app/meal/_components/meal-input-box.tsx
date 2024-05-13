@@ -11,6 +11,9 @@ type MealInputBoxProps = {
   };
   toggleHandler: {
     toggleBreakfast: (id: string) => void;
+    toggleLunch: (id: string) => void;
+    toggleDinner: (id: string) => void;
+    toggleFriday: (id: string) => void;
   };
 };
 
@@ -24,20 +27,25 @@ function MealInputBox({ memberList, meal, toggleHandler }: MealInputBoxProps) {
         className="m-2 bg-gray-200 w-6 rounded-sm"
         onClick={() => toggleHandler.toggleBreakfast(memberList.id)}
       >
-        {meal?.breakfast
-          ? meal.breakfast == 0
-            ? meal.breakfast
-            : meal.breakfast
-          : '-'}
+        {meal?.breakfast === undefined ? '-' : meal.breakfast}
       </button>
-      <button className="m-2 bg-gray-200 w-6 rounded-sm">
-        {meal?.lunch || '-'}
+      <button
+        className="m-2 bg-gray-200 w-6 rounded-sm"
+        onClick={() => toggleHandler.toggleLunch(memberList.id)}
+      >
+        {meal?.lunch === undefined ? '-' : meal.lunch}
       </button>
-      <button className="m-2 bg-gray-200 w-6 rounded-sm">
-        {meal?.dinner || '-'}
+      <button
+        className="m-2 bg-gray-200 w-6 rounded-sm"
+        onClick={() => toggleHandler.toggleDinner(memberList.id)}
+      >
+        {meal?.dinner === undefined ? '-' : meal.dinner}
       </button>
-      <button className="m-2 bg-gray-200 w-6 rounded-sm">
-        {meal?.friday || '-'}
+      <button
+        className="m-2 bg-gray-200 w-6 rounded-sm"
+        onClick={() => toggleHandler.toggleFriday(memberList.id)}
+      >
+        {meal?.friday === undefined ? '-' : meal.friday}
       </button>
     </div>
   );
